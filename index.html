@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <!-- Header principal -->
+    <header class="top-header">
+      <div class="logo-wrap">
+        <span class="logo-icon"><i class="bi bi-book-half"></i></span>
+        <div>
+          <p class="logo-title">Biblioteca Digital</p>
+          <p class="logo-subtitle">Tu espacio de lectura</p>
+        </div>
+      </div>
+
+      <button id="menuToggle" class="menu-toggle" aria-label="Abrir menú">
+        <i class="bi bi-list"></i>
+      </button>
+
+      <nav id="mainNav" class="main-nav" aria-label="Navegación principal">
+        <a href="#">Inicio</a>
+        <a href="#">Catálogo</a>
+        <a href="#">Categorías</a>
+        <a href="#">Mis libros</a>
+        <a href="#">Favoritos</a>
+        <a href="#">Contacto</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-button" aria-label="Notificaciones">
+          <i class="bi bi-bell"></i>
+        </button>
+        <div class="user-pill">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80" alt="Avatar de Valeria">
+          <span>Hola, Valeria</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Layout de contenido principal + panel lateral -->
+    <div class="content-grid">
+      <main class="main-content">
+        <!-- Hero / banner principal -->
+        <section class="hero-section">
+          <div class="hero-copy">
+            <p class="hero-badge">Biblioteca online</p>
+            <h1>Explorá miles de libros digitales</h1>
+            <p>Aprendé, descubrí y disfrutá sin límites.</p>
+            <button class="btn btn-primary action-btn">Explorar catálogo</button>
+          </div>
+
+          <!-- Ilustración visual del hero -->
+          <div class="hero-visual" aria-hidden="true">
+            <div class="visual-card">
+              <p>Lectura inteligente</p>
+              <h3>+12.500 títulos</h3>
+            </div>
+            <div class="book-shape one"></div>
+            <div class="book-shape two"></div>
+            <div class="book-shape three"></div>
+          </div>
+
+          <!-- Buscador superpuesto -->
+          <form id="searchForm" class="search-bar" autocomplete="off">
+            <i class="bi bi-search"></i>
+            <input id="searchInput" type="text" placeholder="Buscar libros, autores o géneros" aria-label="Buscar libros, autores o géneros">
+            <button id="searchButton" type="submit" aria-label="Buscar">
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </form>
+        </section>
+
+        <!-- Sección categorías -->
+        <section class="section-block">
+          <div class="section-head">
+            <h2>Categorías</h2>
+            <a href="#">Ver todas</a>
+          </div>
+          <div class="category-grid">
+            <article class="category-card pastel-blue">
+              <i class="bi bi-journal-richtext"></i>
+              <p>Novelas</p>
+            </article>
+            <article class="category-card pastel-cyan">
+              <i class="bi bi-globe2"></i>
+              <p>Ciencia</p>
+            </article>
+            <article class="category-card pastel-violet">
+              <i class="bi bi-hourglass-split"></i>
+              <p>Historia</p>
+            </article>
+            <article class="category-card pastel-indigo">
+              <i class="bi bi-cpu"></i>
+              <p>Tecnología</p>
+            </article>
+            <article class="category-card pastel-sky">
+              <i class="bi bi-balloon-heart"></i>
+              <p>Infantil</p>
+            </article>
+            <article class="category-card pastel-lavender">
+              <i class="bi bi-mortarboard"></i>
+              <p>Académicos</p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Sección destacados -->
+        <section class="section-block">
+          <div class="section-head">
+            <h2>Destacados</h2>
+            <a href="#">Explorar más</a>
+          </div>
+          <div class="books-grid">
+            <article class="book-card">
+              <div class="cover cover-a"></div>
+              <h3>La casa del faro</h3>
+              <p class="author">Miguel Barrera</p>
+              <p class="rating"><span>★★★★★</span> 4.8 (342)</p>
+              <button class="btn btn-secondary action-btn">Leer</button>
+            </article>
+            <article class="book-card">
+              <div class="cover cover-b"></div>
+              <h3>Sombras de ciudad</h3>
+              <p class="author">Paula Mendoza</p>
+              <p class="rating"><span>★★★★☆</span> 4.5 (289)</p>
+              <button class="btn btn-secondary action-btn">Leer</button>
+            </article>
+            <article class="book-card">
+              <div class="cover cover-c"></div>
+              <h3>Ecos del universo</h3>
+              <p class="author">Dr. Mateo Ruiz</p>
+              <p class="rating"><span>★★★★★</span> 4.9 (411)</p>
+              <button class="btn btn-secondary action-btn">Leer</button>
+            </article>
+            <article class="book-card">
+              <div class="cover cover-d"></div>
+              <h3>Rutas de la historia</h3>
+              <p class="author">Carolina Vega</p>
+              <p class="rating"><span>★★★★☆</span> 4.6 (199)</p>
+              <button class="btn btn-secondary action-btn">Leer</button>
+            </article>
+            <article class="book-card">
+              <div class="cover cover-e"></div>
+              <h3>Código futuro</h3>
+              <p class="author">Diego San Martín</p>
+              <p class="rating"><span>★★★★★</span> 4.7 (358)</p>
+              <button class="btn btn-secondary action-btn">Leer</button>
+            </article>
+            <article class="book-card">
+              <div class="cover cover-f"></div>
+              <h3>El viaje de Nalu</h3>
+              <p class="author">Sofía Klein</p>
+              <p class="rating"><span>★★★★☆</span> 4.4 (174)</p>
+              <button class="btn btn-secondary action-btn">Leer</button>
+            </article>
+          </div>
+        </section>
+
+        <!-- Sección recomendados -->
+        <section class="section-block">
+          <div class="section-head">
+            <h2>Recomendados para vos</h2>
+            <a href="#">Personalizar</a>
+          </div>
+          <div class="recommended-list">
+            <article class="recommended-card">
+              <div class="mini-cover cover-g"></div>
+              <div class="recommended-info">
+                <h3>Horizontes lejanos</h3>
+                <p>Tomás Alcalá</p>
+                <span>★★★★★</span>
+              </div>
+              <button class="btn btn-ghost action-btn">Ver más</button>
+            </article>
+            <article class="recommended-card">
+              <div class="mini-cover cover-h"></div>
+              <div class="recommended-info">
+                <h3>El jardín secreto</h3>
+                <p>Melisa Figueroa</p>
+                <span>★★★★☆</span>
+              </div>
+              <button class="btn btn-ghost action-btn">Ver más</button>
+            </article>
+            <article class="recommended-card">
+              <div class="mini-cover cover-i"></div>
+              <div class="recommended-info">
+                <h3>La clave de la vida</h3>
+                <p>Dr. Helena Costa</p>
+                <span>★★★★★</span>
+              </div>
+              <button class="btn btn-ghost action-btn">Ver más</button>
+            </article>
+            <article class="recommended-card">
+              <div class="mini-cover cover-j"></div>
+              <div class="recommended-info">
+                <h3>Donde nace el mar</h3>
+                <p>Lucas Pereyra</p>
+                <span>★★★★☆</span>
+              </div>
+              <button class="btn btn-ghost action-btn">Ver más</button>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <!-- Panel lateral derecho -->
+      <aside class="side-panel">
+        <section class="panel-card">
+          <h3>Tu progreso de lectura</h3>
+          <p class="strong">El mapa de los días</p>
+          <p>Laura Espinosa</p>
+          <div class="progress-wrap">
+            <div class="progress-fill" style="width: 65%;"></div>
+          </div>
+          <span class="progress-text">65% completado</span>
+        </section>
+
+        <section class="panel-card">
+          <h3>Libros guardados</h3>
+          <ul class="saved-list">
+            <li>
+              <strong>La casa del faro</strong>
+              <span>Miguel Barrera</span>
+            </li>
+            <li>
+              <strong>Voces del silencio</strong>
+              <span>Ana Beltrán</span>
+            </li>
+            <li>
+              <strong>El último verano</strong>
+              <span>Julián Torres</span>
+            </li>
+          </ul>
+        </section>
+
+        <section class="panel-card loan-card">
+          <h3>Préstamo digital</h3>
+          <p class="strong">Tu próximo libro</p>
+          <p>Disponible para retiro en 2 días</p>
+          <button class="btn btn-primary action-btn">Ver mis préstamos</button>
+        </section>
+      </aside>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+      <div class="footer-brand">
+        <div class="logo-wrap">
+          <span class="logo-icon"><i class="bi bi-book-half"></i></span>
+          <div>
+            <p class="logo-title">Biblioteca Digital</p>
+            <p class="logo-subtitle">Lectura que conecta mundos.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <div>
+          <h4>Explorar</h4>
+          <a href="#">Catálogo</a>
+          <a href="#">Categorías</a>
+          <a href="#">Novedades</a>
+        </div>
+        <div>
+          <h4>Ayuda</h4>
+          <a href="#">Preguntas frecuentes</a>
+          <a href="#">Guías de uso</a>
+          <a href="#">Soporte</a>
+        </div>
+        <div>
+          <h4>Institucional</h4>
+          <a href="#">Sobre nosotros</a>
+          <a href="#">Términos y condiciones</a>
+          <a href="#">Política de privacidad</a>
+        </div>
+      </div>
+
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+        <a href="#" aria-label="X"><i class="bi bi-twitter-x"></i></a>
+      </div>
+
+      <p class="copyright">© 2024 Biblioteca Digital. Todos los derechos reservados.</p>
+    </footer>
+  </div>
+
+  <!-- Toast para feedback de búsqueda -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

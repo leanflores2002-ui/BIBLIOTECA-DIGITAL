@@ -1,5 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const pool = require("../config/db");
 
 const router = express.Router();
@@ -18,9 +19,10 @@ router.post("/register", async (req, res) => {
 
     const [role] = await pool.query("SELECT role_id FROM roles WHERE role_name = 'user' LIMIT 1");
     const roleId = role[0]?.role_id || 2;
+    const passwordHash = await bcrypt.hash(password, 10);
     const [result] = await pool.query(
       "INSERT INTO users (first_name, last_name, email, password_hash, role_id, status) VALUES (?, ?, ?, ?, ?, 'active')",
-      [first_name, last_name, email, password, roleId]
+      [first_name, last_name, email, passwordHash, roleId]
     );
 
     const token = jwt.sign(
@@ -45,7 +47,8 @@ router.post("/login", async (req, res) => {
 
     const [rows] = await pool.query("SELECT u.user_id, u.first_name, u.last_name, u.email, u.password_hash, r.role_name FROM users u JOIN roles r ON u.role_id = r.role_id WHERE u.email = ? LIMIT 1", [email]);
     const user = rows[0];
-    if (!user || user.password_hash !== password) {
+    const passwordMatches = user ? await bcrypt.compare(password, user.password_hash) : false;
+    if (!user || !passwordMatches) {
       return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
     }
 

@@ -52,7 +52,9 @@ http://localhost:4000
 > Nota: los usuarios precargados usan contraseñas de demostración en el seed. Para un entorno real, reemplaza estos valores y utiliza hashing de contraseñas.
 ## API y conexión
 
-- Variables de entorno definidas en `.env`: `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_PORT`, `JWT_SECRET`.
+- Variables de entorno definidas en `.env`: `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_PORT`, `DB_SSL_CA`, `JWT_SECRET`.
+- `DB_SSL_CA` debe apuntar al certificado CA de Aiven, p.ej. `./certs/ca.pem`.
+- Endpoint de salud de la base de datos: `GET /api/health/db`.
 - No se incluyen credenciales reales.
 
 ## Carpeta `/bd`

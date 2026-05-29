@@ -2,6 +2,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const pool = require("../config/db");
+const { getJwtSecret } = require("../middlewares/auth");
 
 const router = express.Router();
 
@@ -12,6 +13,7 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ error: "Todos los campos son requeridos" });
     }
 
+    const jwtSecret = getJwtSecret();
     const [existing] = await pool.query("SELECT user_id FROM users WHERE email = ?", [email]);
     if (existing.length) {
       return res.status(409).json({ error: "El email ya está registrado" });
@@ -27,13 +29,16 @@ router.post("/register", async (req, res) => {
 
     const token = jwt.sign(
       { user_id: result.insertId, email, role: "user" },
-      process.env.JWT_SECRET || "secret_demo",
+      jwtSecret,
       { expiresIn: "8h" }
     );
 
     res.json({ token, user: { user_id: result.insertId, first_name, last_name, email, role: "user" } });
   } catch (err) {
-    console.error(err);
+    console.error("Error en registro:", err.message);
+    if (err.statusCode === 500) {
+      return res.status(500).json({ error: err.message });
+    }
     res.status(500).json({ error: "No se pudo registrar el usuario" });
   }
 });
@@ -45,6 +50,7 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Email y contraseña son obligatorios" });
     }
 
+    const jwtSecret = getJwtSecret();
     const [rows] = await pool.query("SELECT u.user_id, u.first_name, u.last_name, u.email, u.password_hash, r.role_name FROM users u JOIN roles r ON u.role_id = r.role_id WHERE u.email = ? LIMIT 1", [email]);
     const user = rows[0];
     const passwordMatches = user ? await bcrypt.compare(password, user.password_hash) : false;
@@ -54,7 +60,7 @@ router.post("/login", async (req, res) => {
 
     const token = jwt.sign(
       { user_id: user.user_id, email: user.email, role: user.role_name },
-      process.env.JWT_SECRET || "secret_demo",
+      jwtSecret,
       { expiresIn: "8h" }
     );
 
@@ -69,7 +75,10 @@ router.post("/login", async (req, res) => {
       }
     });
   } catch (err) {
-    console.error(err);
+    console.error("Error en login:", err.message);
+    if (err.statusCode === 500) {
+      return res.status(500).json({ error: err.message });
+    }
     res.status(500).json({ error: "No se pudo iniciar sesión" });
   }
 });

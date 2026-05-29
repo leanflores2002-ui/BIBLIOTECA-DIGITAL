@@ -190,23 +190,23 @@ INSERT INTO copies (book_id, barcode, status, copy_condition, acquired_at) VALUE
 
 -- Usuarios normales y administradores
 INSERT INTO users (first_name, last_name, email, password_hash, role_id, status) VALUES
-('Valeria', 'González', 'valeria@example.com', 'pass1234', 1, 'active'),
-('Admin', 'Central', 'admin@example.com', 'admin1234', 1, 'active'),
-('Santiago', 'Pérez', 'santiago@example.com', 'user123', 2, 'active'),
-('María', 'Rodríguez', 'maria@example.com', 'user123', 2, 'active'),
-('Lucas', 'Fernández', 'lucas@example.com', 'user123', 2, 'active'),
-('Camila', 'García', 'camila@example.com', 'user123', 2, 'active'),
-('Martín', 'Díaz', 'martin@example.com', 'user123', 2, 'active'),
-('Lucía', 'Herrera', 'lucia@example.com', 'user123', 2, 'active'),
-('Nicolás', 'Sosa', 'nicolas@example.com', 'user123', 2, 'active'),
-('Florencia', 'Núñez', 'florencia@example.com', 'user123', 2, 'active'),
-('Diego', 'Ramos', 'diego@example.com', 'user123', 2, 'active'),
-('Sofía', 'Mendoza', 'sofia@example.com', 'user123', 2, 'active'),
-('Andrés', 'López', 'andres@example.com', 'user123', 2, 'active'),
-('Mónica', 'Blanco', 'monica@example.com', 'user123', 2, 'active'),
-('Clara', 'Paz', 'clara@example.com', 'user123', 2, 'active'),
-('Tomás', 'Bravo', 'tomas@example.com', 'user123', 2, 'active'),
-('Paula', 'Campos', 'paula@example.com', 'user123', 2, 'active');
+('Valeria', 'González', 'valeria@example.com', '$2a$10$Dci1HmSoluBOiOy03C8.3ecQ60K2jhcp/gpQl6e2NibX.4Jr6FC6C', 1, 'active'),
+('Admin', 'Central', 'admin@example.com', '$2a$10$J6gvNJupIwWAKveF7R0XVuIjcgASIxCwkZx.OxJeH5rsJlSC0o74O', 1, 'active'),
+('Santiago', 'Pérez', 'santiago@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active'),
+('María', 'Rodríguez', 'maria@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active'),
+('Lucas', 'Fernández', 'lucas@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active'),
+('Camila', 'García', 'camila@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active'),
+('Martín', 'Díaz', 'martin@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active'),
+('Lucía', 'Herrera', 'lucia@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active'),
+('Nicolás', 'Sosa', 'nicolas@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active'),
+('Florencia', 'Núñez', 'florencia@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active'),
+('Diego', 'Ramos', 'diego@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active'),
+('Sofía', 'Mendoza', 'sofia@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active'),
+('Andrés', 'López', 'andres@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active'),
+('Mónica', 'Blanco', 'monica@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active'),
+('Clara', 'Paz', 'clara@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active'),
+('Tomás', 'Bravo', 'tomas@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active'),
+('Paula', 'Campos', 'paula@example.com', '$2a$10$uzv0Zi/TGS4usgHCZKgET.VarJtVHyrfr16.wn3VAKu9kzCdfhG/G', 2, 'active');
 
 -- Historia de precios
 INSERT INTO price_history (book_id, old_purchase_price, new_purchase_price, old_rental_price, new_rental_price, changed_by, changed_at, reason) VALUES

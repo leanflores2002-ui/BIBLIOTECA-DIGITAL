@@ -1,35 +1,20 @@
 # Deploy en Railway
 
-Guia detallada para desplegar Biblioteca Digital en Railway usando GitHub, Node.js, Express y MySQL en Aiven.
+Guia para desplegar Biblioteca Digital en Railway con Node.js, Express y MySQL en Aiven.
 
-## Requisitos previos
+## Pasos
 
-- Cuenta en GitHub.
-- Cuenta en Railway.
-- Proyecto subido a un repositorio de GitHub.
-- Base de datos MySQL creada en Aiven.
-- Certificado CA de Aiven disponible en `certs/ca.pem`.
-- Variables reales de conexion: host, puerto, usuario, password y nombre de base.
+1. Confirmar que `.env` no este versionado.
+2. Subir el repositorio a GitHub.
+3. Crear `New Project` en Railway.
+4. Elegir `Deploy from GitHub repo`.
+5. Seleccionar el repositorio.
+6. Esperar el build de Nixpacks.
+7. Cargar variables de entorno.
+8. Generar dominio publico.
+9. Probar endpoints y frontend.
 
-## Subir a GitHub
-
-1. Verificar que `.env` no este versionado.
-2. Verificar que `.gitignore` incluya `.env` y `node_modules/`.
-3. Confirmar que no haya credenciales reales en el codigo.
-4. Subir el repositorio a GitHub.
-
-No subir `DB_PASSWORD`, `JWT_SECRET` real ni archivos con credenciales privadas. El certificado CA publico de Aiven puede mantenerse como archivo local si no contiene secretos privados.
-
-## Crear proyecto en Railway
-
-1. Entrar a Railway.
-2. Crear `New Project`.
-3. Elegir `Deploy from GitHub repo`.
-4. Seleccionar el repositorio de Biblioteca Digital.
-5. Esperar a que Railway detecte el proyecto Node.js con Nixpacks.
-6. Confirmar que el comando de inicio sea `npm start`.
-
-El archivo `railway.json` ya define:
+`railway.json` define:
 
 ```json
 {
@@ -37,35 +22,34 @@ El archivo `railway.json` ya define:
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "npm start"
+    "startCommand": "npm start",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
   }
 }
 ```
 
-## Configurar variables
+## Variables Railway
 
-En `Railway -> Service -> Variables`, cargar:
+Configurar en `Service -> Variables`:
 
 ```env
+NODE_ENV=production
 DB_HOST=bookonline00-114-pmccole14-ecdc.d.aivencloud.com
 DB_PORT=21861
 DB_USER=avnadmin
-DB_PASSWORD=CONTRASEÑA_REAL_DE_AIVEN
+DB_PASSWORD=REEMPLAZAR_PASSWORD_REAL
 DB_NAME=biblioteca_digital
 DB_SSL_CA_CONTENT=CONTENIDO_COMPLETO_DEL_CA_PEM
-JWT_SECRET=CLAVE_SECRETA_LARGA
+JWT_SECRET=REEMPLAZAR_SECRET_FUERTE
 ```
 
-`PORT` es definido automaticamente por Railway. Si queres declararlo manualmente para pruebas, puede ser:
+Railway define `PORT` automaticamente. El servidor usa `process.env.PORT || 4000`, por lo que no hay que hardcodear puertos.
 
-```env
-PORT=4000
-```
-
-## Cargar DB_SSL_CA_CONTENT
+## Copiar el CA de Aiven
 
 1. Abrir `certs/ca.pem`.
-2. Copiar todo el contenido:
+2. Copiar todo el contenido, incluyendo:
 
 ```text
 -----BEGIN CERTIFICATE-----
@@ -73,172 +57,85 @@ PORT=4000
 -----END CERTIFICATE-----
 ```
 
-3. Pegar el contenido completo en `DB_SSL_CA_CONTENT`.
+3. Pegar ese contenido completo en `DB_SSL_CA_CONTENT`.
 
-Si Railway no conserva los saltos de linea, se puede reemplazar cada salto por `\n`. El backend convierte esos `\n` a saltos reales antes de crear el pool MySQL.
+Si Railway no conserva saltos de linea, pegarlo con `\n`. El backend convierte esos `\n` a saltos reales antes de crear el pool MySQL.
 
-En local se puede seguir usando:
+En local se puede usar:
 
 ```env
 DB_SSL_CA=./certs/ca.pem
 ```
 
-En Railway, si usas `DB_SSL_CA_CONTENT`, no hace falta configurar `DB_SSL_CA`.
+En Railway, si existe `DB_SSL_CA_CONTENT`, no hace falta `DB_SSL_CA`.
 
-## Revisar logs
+## Probar
 
-En Railway:
-
-1. Entrar al servicio.
-2. Abrir `Deployments` o `Logs`.
-3. Revisar errores de build, inicio o conexion.
-
-El servidor no imprime `DB_PASSWORD`, `JWT_SECRET` ni el contenido del certificado. Solo muestra si las variables principales estan configuradas.
-
-## Probar endpoints
-
-Despues de generar el dominio publico, probar:
+Despues del deploy:
 
 ```text
-https://URL-DE-RAILWAY/api/status
+https://TU-DOMINIO.up.railway.app/api/status
+https://TU-DOMINIO.up.railway.app/api/health/env
+https://TU-DOMINIO.up.railway.app/api/health/db
+https://TU-DOMINIO.up.railway.app/api/books
+https://TU-DOMINIO.up.railway.app/
 ```
 
-Respuesta esperada:
+Respuestas esperadas:
 
 ```json
-{ "status": "ok" }
+{
+  "status": "ok",
+  "message": "API de Biblioteca Digital activa"
+}
 ```
-
-Probar diagnostico seguro:
-
-```text
-https://URL-DE-RAILWAY/api/health/env
-```
-
-Respuesta esperada:
 
 ```json
 {
   "ok": true,
-  "node_env": "production",
-  "db_host_configured": true,
-  "db_name_configured": true,
-  "ssl_configured": true
+  "database": "biblioteca_digital"
 }
 ```
 
-Probar conexion a base:
+## Revisar logs
 
-```text
-https://URL-DE-RAILWAY/api/health/db
-```
+En Railway abrir `Deployments` o `Logs`. El servidor solo imprime indicadores booleanos de configuracion y no imprime `DB_PASSWORD`, `JWT_SECRET` ni certificado.
 
-Respuesta esperada:
-
-```json
-{ "ok": true, "database": "biblioteca_digital" }
-```
-
-Probar catalogo:
-
-```text
-https://URL-DE-RAILWAY/api/books
-```
-
-## Probar la web
-
-Abrir:
-
-```text
-https://URL-DE-RAILWAY/
-```
-
-Verificar:
-
-- Catalogo de libros.
-- Login.
-- Registro.
-- Rutas de usuario.
-- Rutas de administrador.
-- Compras y alquileres si estan implementados.
-
-El frontend usa rutas relativas como `/api/books`, por lo que funciona desde la misma URL publica de Railway.
-
-## Errores comunes y soluciones
+## Errores comunes
 
 ### Application failed to respond
 
-Revisar que `server.js` use:
+Revisar que Railway use `npm start` y que el servidor escuche `process.env.PORT`.
 
-```js
-const PORT = process.env.PORT || 4000;
-```
+### Access denied
 
-Tambien revisar que Railway use `npm start`.
-
-### Access denied for user
-
-Revisar `DB_USER` y `DB_PASSWORD`. Confirmar que el password sea el real de Aiven y que no tenga espacios extra.
+Revisar `DB_USER` y `DB_PASSWORD`. Confirmar que la password real no tenga espacios extra.
 
 ### Unknown database
 
-Revisar `DB_NAME`. Debe existir en Aiven y coincidir con el nombre configurado.
+Revisar `DB_NAME` y confirmar que `schema_reparado.sql` fue importado en Aiven.
 
 ### SSL error
 
-Revisar `DB_SSL_CA_CONTENT`. Debe incluir el certificado completo desde `-----BEGIN CERTIFICATE-----` hasta `-----END CERTIFICATE-----`.
-
-Si se uso `\n`, confirmar que no se hayan eliminado caracteres.
+Revisar `DB_SSL_CA_CONTENT`. Debe contener todo el certificado CA. Si se uso `\n`, confirmar que no falten caracteres.
 
 ### Cannot find module
 
-Correr localmente:
-
-```bash
-npm install
-```
-
-Luego verificar que toda dependencia usada este declarada en `package.json`.
-
-### npm start not found
-
-Revisar que `package.json` tenga:
-
-```json
-"scripts": {
-  "start": "node server.js"
-}
-```
-
-Si Railway no lo detecta, configurar `Settings -> Deploy -> Start Command` con `npm start`.
+Ejecutar `npm install` localmente y confirmar que toda dependencia importada este en `package.json`.
 
 ### La web carga pero no aparecen libros
 
-Probar:
+Probar `/api/books` y `/api/health/db`. Si `/api/health/db` falla, revisar variables de Aiven y SSL.
 
-```text
-https://URL-DE-RAILWAY/api/books
-```
+### Login o registro falla
 
-Si falla, revisar logs, variables de base de datos y `/api/health/db`.
+Revisar `JWT_SECRET` y que existan tablas `users` y `roles`. El seed usa hashes bcrypt para los usuarios demo.
 
-### El login o registro falla
+## Checklist antes de deploy
 
-Revisar que `JWT_SECRET` este configurado y que existan las tablas esperadas (`users`, `roles`) en la base de datos.
-
-## Comando local de verificacion
-
-```bash
-npm install
-npm start
-```
-
-Luego probar:
-
-```text
-http://localhost:4000/api/status
-http://localhost:4000/api/health/env
-http://localhost:4000/api/health/db
-http://localhost:4000/api/books
-http://localhost:4000/
-```
+- `npm install` funciona.
+- `npm start` funciona.
+- `.env` no esta versionado.
+- `DB_PASSWORD` y `JWT_SECRET` no estan en el codigo.
+- `DB_SSL_CA_CONTENT` esta configurado en Railway.
+- La base tiene `schema_reparado.sql` y, si corresponde, `seed_reparado.sql`.

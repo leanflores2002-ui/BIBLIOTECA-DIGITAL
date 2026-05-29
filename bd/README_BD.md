@@ -1,50 +1,39 @@
 # Biblioteca Digital - Base de Datos
 
-## Importación de la base de datos
+## Importacion
 
-1. Crea la base de datos e importa el esquema:
-   - Ejecuta `schema.sql` en tu servidor MySQL/MariaDB.
+1. Ejecutar `schema_reparado.sql` en MySQL/Aiven para crear tablas, claves e indices.
+2. Ejecutar `seed_reparado.sql` despues del esquema para cargar datos de prueba.
+3. Ejecutar `queries_test.sql` para validar consultas principales.
 
-2. Carga los datos precargados:
-   - Ejecuta `seed.sql` después de `schema.sql`.
+## Orden correcto
 
-3. Ejecuta consultas de prueba:
-   - Usa `queries_test.sql` para verificar que la base de datos funciona correctamente.
-
-## Orden correcto de ejecución
-
-1. `schema.sql`
-2. `seed.sql`
+1. `schema_reparado.sql`
+2. `seed_reparado.sql`
 3. `queries_test.sql`
 
-## Configuración de la conexión
+## Variables del backend
 
-El backend usa variables de entorno para la conexión:
+El backend no usa valores locales por defecto para la base. Configurar siempre:
 
-- `DB_HOST`: host de la base de datos.
-- `DB_USER`: usuario de la base.
-- `DB_PASSWORD`: contraseña del usuario.
-- `DB_NAME`: nombre de la base de datos.
-- `DB_PORT`: puerto de MySQL/MariaDB.
-- `JWT_SECRET`: clave secreta para los tokens JWT.
-
-## Archivo de ejemplo
-
-Copia `.env.example` a `.env` y reemplaza los valores con tus datos reales.
-
-Ejemplo:
-
-```
-DB_HOST=localhost
-DB_USER=mi_usuario
-DB_PASSWORD=mi_contraseña_segura
+```env
+DB_HOST=bookonline00-114-pmccole14-ecdc.d.aivencloud.com
+DB_PORT=21861
+DB_USER=avnadmin
+DB_PASSWORD=REEMPLAZAR_PASSWORD
 DB_NAME=biblioteca_digital
-DB_PORT=3306
-JWT_SECRET=mi_clave_secreta
+DB_SSL_CA=./certs/ca.pem
+JWT_SECRET=REEMPLAZAR_JWT_SECRET
 ```
 
-## Recomendaciones
+En Railway usar `DB_SSL_CA_CONTENT` con el contenido completo del certificado CA en lugar de `DB_SSL_CA`.
 
-- No comites el archivo `.env` con credenciales reales.
-- Asegúrate de que el servidor MySQL/MariaDB esté en ejecución antes de iniciar el backend.
-- Si importas en un servidor remoto, actualiza `.env` con la dirección y credenciales del servidor.
+## Datos de prueba
+
+Los usuarios del seed usan hashes bcrypt, no contrasenas en texto plano. Credenciales demo:
+
+- `admin@example.com` / `admin1234`
+- `valeria@example.com` / `pass1234`
+- `santiago@example.com` / `user123`
+
+No usar estas credenciales en produccion.

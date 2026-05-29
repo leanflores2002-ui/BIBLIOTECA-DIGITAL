@@ -6,7 +6,7 @@ SELECT b.book_id, b.title, b.purchase_price, b.rental_price,
 FROM books b
 LEFT JOIN copies cp ON b.book_id = cp.book_id
 WHERE b.is_active = 1
-GROUP BY b.book_id
+GROUP BY b.book_id, b.title, b.purchase_price, b.rental_price
 HAVING available_count > 0
 ORDER BY b.title;
 
@@ -46,14 +46,14 @@ SELECT b.book_id, b.title,
   SUM(cp.status IN ('loaned','reserved')) AS stock_reservado_y_prestado
 FROM books b
 LEFT JOIN copies cp ON b.book_id = cp.book_id
-GROUP BY b.book_id
+GROUP BY b.book_id, b.title
 ORDER BY stock_disponible DESC;
 
 -- 7) Ver libros más alquilados
 SELECT b.book_id, b.title, COUNT(li.loan_item_id) AS veces_alquilado
 FROM loan_items li
 JOIN books b ON li.book_id = b.book_id
-GROUP BY b.book_id
+GROUP BY b.book_id, b.title
 ORDER BY veces_alquilado DESC
 LIMIT 10;
 
@@ -61,7 +61,7 @@ LIMIT 10;
 SELECT b.book_id, b.title, SUM(si.quantity) AS unidades_vendidas
 FROM sale_items si
 JOIN books b ON si.book_id = b.book_id
-GROUP BY b.book_id
+GROUP BY b.book_id, b.title
 ORDER BY unidades_vendidas DESC
 LIMIT 10;
 
@@ -82,5 +82,5 @@ LEFT JOIN categories c ON bc.category_id = c.category_id
 WHERE b.title LIKE '%viaje%'
   OR a.name LIKE '%Mateo%'
   OR c.name LIKE '%Ciencia%'
-GROUP BY b.book_id
+GROUP BY b.book_id, b.title
 ORDER BY b.title;

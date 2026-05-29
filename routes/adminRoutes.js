@@ -28,13 +28,13 @@ router.get("/books", async (req, res) => {
   try {
     const [books] = await pool.query(
       `SELECT b.book_id, b.title, b.purchase_price, b.rental_price, b.is_active, p.name AS publisher_name,
-        SUM(cp.status = 'available') AS available_copies,
-        SUM(cp.status = 'loaned') AS loaned,
-        SUM(cp.status = 'sold') AS sold
+        COALESCE(SUM(cp.status = 'available'), 0) AS available_copies,
+        COALESCE(SUM(cp.status = 'loaned'), 0) AS loaned,
+        COALESCE(SUM(cp.status = 'sold'), 0) AS sold
        FROM books b
        LEFT JOIN publishers p ON b.publisher_id = p.publisher_id
        LEFT JOIN copies cp ON b.book_id = cp.book_id
-       GROUP BY b.book_id
+       GROUP BY b.book_id, b.title, b.purchase_price, b.rental_price, b.is_active, p.name
        ORDER BY b.title`
     );
     res.json(books);
@@ -126,16 +126,22 @@ router.post("/books/:id/prices", async (req, res) => {
 router.post("/books/:id/copies", async (req, res) => {
   try {
     const bookId = Number(req.params.id);
-    const { quantity, status, condition } = req.body;
+    const { quantity, status, condition, copy_condition } = req.body;
+    const allowedStatuses = new Set(["available", "loaned", "reserved", "sold", "damaged", "inactive"]);
+    const allowedConditions = new Set(["new", "good", "used", "damaged"]);
     const qty = Number(quantity) || 0;
     if (qty <= 0) {
       return res.status(400).json({ error: "Cantidad de ejemplares debe ser mayor a cero" });
     }
 
+    const copyStatus = allowedStatuses.has(status) ? status : "available";
+    const requestedCondition = copy_condition || condition;
+    const copyCondition = allowedConditions.has(requestedCondition) ? requestedCondition : "good";
+
     for (let i = 0; i < qty; i += 1) {
       await pool.query(
-        "INSERT INTO copies (book_id, barcode, status, condition, acquired_at) VALUES (?, UUID(), ?, ?, NOW())",
-        [bookId, status || 'available', condition || 'good']
+        "INSERT INTO copies (book_id, barcode, status, copy_condition, acquired_at) VALUES (?, UUID(), ?, ?, NOW())",
+        [bookId, copyStatus, copyCondition]
       );
     }
 

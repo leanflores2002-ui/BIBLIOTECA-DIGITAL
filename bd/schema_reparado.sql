@@ -1,4 +1,5 @@
 -- Biblioteca Digital: esquema completo de base de datos
+-- Archivo reparado: se reemplazó condition por copy_condition y TINYINT(1) por TINYINT UNSIGNED
 -- Base de datos diseñada para MySQL/MariaDB
 
 CREATE DATABASE IF NOT EXISTS biblioteca_digital CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -61,7 +62,7 @@ CREATE TABLE IF NOT EXISTS books (
   purchase_price DECIMAL(8,2) NOT NULL DEFAULT 0.00,
   rental_price DECIMAL(8,2) NOT NULL DEFAULT 0.00,
   stock_minimum INT UNSIGNED NOT NULL DEFAULT 1,
-  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  is_active TINYINT UNSIGNED NOT NULL DEFAULT 1,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (publisher_id) REFERENCES publishers(publisher_id)
@@ -103,7 +104,7 @@ CREATE TABLE IF NOT EXISTS copies (
   book_id INT UNSIGNED NOT NULL,
   barcode VARCHAR(60) NOT NULL UNIQUE,
   status ENUM('available','loaned','reserved','sold','damaged','inactive') NOT NULL DEFAULT 'available',
-  condition ENUM('new','good','used','damaged') NOT NULL DEFAULT 'good',
+  copy_condition ENUM('new','good','used','damaged') NOT NULL DEFAULT 'good',
   acquired_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (book_id) REFERENCES books(book_id)
     ON UPDATE CASCADE

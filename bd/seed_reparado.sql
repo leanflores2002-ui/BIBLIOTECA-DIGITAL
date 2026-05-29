@@ -1,3 +1,4 @@
+SET NAMES utf8mb4;
 USE biblioteca_digital;
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -108,7 +109,7 @@ INSERT INTO book_categories (book_id, category_id) VALUES
 (20, 4),(21, 5),(22, 5),(23, 6),(24, 4),(25, 1),(26, 5),(27, 4),(28, 5),(29, 2),(30, 3);
 
 -- Ejemplares
-INSERT INTO copies (book_id, barcode, status, condition, acquired_at) VALUES
+INSERT INTO copies (book_id, barcode, status, copy_condition, acquired_at) VALUES
 (1, 'CP-0001-01', 'available', 'good', NOW()),
 (1, 'CP-0001-02', 'loaned', 'good', NOW() - INTERVAL 15 DAY),
 (1, 'CP-0001-03', 'sold', 'good', NOW() - INTERVAL 45 DAY),
@@ -254,3 +255,26 @@ INSERT INTO stock_movements (book_id, copy_id, quantity, movement_type, movement
 (1, NULL, 1, 'sale', NOW() - INTERVAL 12 DAY, 'Venta registrada en seed'),
 (2, NULL, 1, 'sale', NOW() - INTERVAL 9 DAY, 'Venta registrada en seed'),
 (3, NULL, 1, 'sale', NOW() - INTERVAL 5 DAY, 'Venta registrada en seed');
+
+-- Reservas de ejemplo
+INSERT INTO reservations (user_id, book_id, reserved_at, expires_at, status) VALUES
+(9, 6, NOW() - INTERVAL 1 DAY, NOW() + INTERVAL 2 DAY, 'pending'),
+(10, 13, NOW() - INTERVAL 2 DAY, NOW() + INTERVAL 1 DAY, 'pending'),
+(11, 17, NOW() - INTERVAL 10 DAY, NOW() - INTERVAL 5 DAY, 'expired'),
+(12, 21, NOW() - INTERVAL 6 DAY, NOW() - INTERVAL 1 DAY, 'fulfilled');
+
+-- Carritos de compra/alquiler de ejemplo
+INSERT INTO carts (user_id, status, created_at, updated_at) VALUES
+(3, 'open', NOW() - INTERVAL 1 DAY, NOW()),
+(4, 'open', NOW() - INTERVAL 2 DAY, NOW()),
+(5, 'submitted', NOW() - INTERVAL 5 DAY, NOW() - INTERVAL 5 DAY),
+(6, 'discarded', NOW() - INTERVAL 8 DAY, NOW() - INTERVAL 7 DAY);
+
+INSERT INTO cart_items (cart_id, book_id, quantity, item_type) VALUES
+(1, 4, 1, 'purchase'),
+(1, 6, 1, 'rental'),
+(2, 9, 1, 'purchase'),
+(2, 20, 1, 'rental'),
+(3, 3, 1, 'purchase'),
+(4, 8, 1, 'rental');
+

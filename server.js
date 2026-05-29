@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const pool = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
@@ -12,16 +13,17 @@ const adminRoutes = require("./routes/adminRoutes");
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-console.log("Configuración BD cargada:");
-console.log("DB_HOST:", process.env.DB_HOST);
-console.log("DB_PORT:", process.env.DB_PORT);
-console.log("DB_USER:", process.env.DB_USER);
-console.log("DB_NAME:", process.env.DB_NAME);
-console.log("DB_SSL_CA:", process.env.DB_SSL_CA);
+console.log("Configuracion BD cargada:", {
+  db_host_configured: Boolean(process.env.DB_HOST),
+  db_port_configured: Boolean(process.env.DB_PORT),
+  db_user_configured: Boolean(process.env.DB_USER),
+  db_name_configured: Boolean(process.env.DB_NAME),
+  ssl_configured: Boolean(process.env.DB_SSL_CA_CONTENT || process.env.DB_SSL_CA)
+});
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname)));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
@@ -29,7 +31,17 @@ app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 
 app.get("/api/status", (req, res) => {
-  res.json({ status: "ok", message: "API de Biblioteca Digital activa" });
+  res.json({ status: "ok" });
+});
+
+app.get("/api/health/env", (req, res) => {
+  res.json({
+    ok: true,
+    node_env: process.env.NODE_ENV || "development",
+    db_host_configured: Boolean(process.env.DB_HOST),
+    db_name_configured: Boolean(process.env.DB_NAME),
+    ssl_configured: Boolean(process.env.DB_SSL_CA_CONTENT || process.env.DB_SSL_CA)
+  });
 });
 
 app.get("/api/health/db", async (req, res) => {
@@ -52,5 +64,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor iniciado en http://localhost:${PORT}`);
+  console.log(`Servidor iniciado en puerto ${PORT}`);
 });
